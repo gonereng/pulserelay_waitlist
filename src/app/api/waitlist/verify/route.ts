@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readWaitlist, writeWaitlist } from "@/lib/waitlist";
+import { prisma } from "@/lib/waitlist";
 
 export async function GET(request: Request) {
   try {
@@ -12,8 +12,9 @@ export async function GET(request: Request) {
       );
     }
 
-    const waitlist = await readWaitlist();
-    const entry = waitlist.find((e) => e.token === token);
+    const entry = await prisma.waitlistEntry.findUnique({
+      where: { token },
+    });
 
     if (!entry) {
       return NextResponse.redirect(
@@ -27,8 +28,10 @@ export async function GET(request: Request) {
       );
     }
 
-    entry.verified = true;
-    await writeWaitlist(waitlist);
+    await prisma.waitlistEntry.update({
+      where: { token },
+      data: { verified: true, confirmedAt: new Date() },
+    });
 
     return NextResponse.redirect(
       new URL("/?verified=success", request.url)

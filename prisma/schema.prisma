@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model WaitlistEntry {
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  token       String    @unique
+  verified    Boolean   @default(false)
+  joinedAt    DateTime  @default(now())
+  confirmedAt DateTime?
+  consentText String
+}

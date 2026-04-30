@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { readWaitlist, writeWaitlist } from "@/lib/waitlist";
+import { prisma, generateToken } from "@/lib/waitlist";
 import { sendConfirmationEmail } from "@/lib/mailer";
-import { generateToken } from "@/lib/waitlist";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email } = body;
+    const { email, consentText } = body;
 
     if (!email || typeof email !== "string") {
       return NextResponse.json(
@@ -23,9 +22,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const waitlist = await readWaitlist();
+    const existing = await prisma.waitlistEntry.findUnique({
+      where: { email },
+    });
 
-    const existing = waitlist.find((entry) => entry.email === email);
     if (existing) {
       if (existing.verified) {
         return NextResponse.json(
@@ -33,10 +33,12 @@ export async function POST(request: Request) {
           { status: 409 }
         );
       }
+
       const token = generateToken();
-      existing.token = token;
-      existing.joinedAt = new Date().toISOString();
-      await writeWaitlist(waitlist);
+      await prisma.waitlistEntry.update({
+        where: { email },
+        data: { token, joinedAt: new Date(), consentText: consentText || existing.consentText },
+      });
       await sendConfirmationEmail(email, token);
       return NextResponse.json(
         {
@@ -48,13 +50,14 @@ export async function POST(request: Request) {
     }
 
     const token = generateToken();
-    waitlist.push({
-      email,
-      token,
-      verified: false,
-      joinedAt: new Date().toISOString(),
+    await prisma.waitlistEntry.create({
+      data: {
+        email,
+        token,
+        verified: false,
+        consentText: consentText || "",
+      },
     });
-    await writeWaitlist(waitlist);
     await sendConfirmationEmail(email, token);
 
     return NextResponse.json(
@@ -75,12 +78,11 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const waitlist = await readWaitlist();
-    const verified = waitlist.filter((e) => e.verified);
-    return NextResponse.json({
-      count: verified.length,
-      total: waitlist.length,
+    const total = await prisma.waitlistEntry.count();
+    const verified = await prisma.waitlistEntry.count({
+      where: { verified: true },
     });
+    return NextResponse.json({ count: verified, total });
   } catch {
     return NextResponse.json(
       { error: "Failed to read waitlist." },

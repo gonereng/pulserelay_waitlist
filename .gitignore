@@ -42,3 +42,5 @@ next-env.d.ts
 
 # waitlist data
 /data/
+
+/src/generated/prisma

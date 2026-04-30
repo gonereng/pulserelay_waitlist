@@ -1,42 +1,32 @@
-import { WaitlistForm } from "@/components/WaitlistForm";
+import Image from 'next/image';
+import { WaitlistForm } from '@/components/WaitlistForm';
 
 export default function Home() {
-  return (
-    <>
-      <section className="max-w-7xl mx-auto px-6 py-hero text-center">
-        <h1 className="text-3xl font-bold leading-tight lg:text-5xl lg:leading-tight mb-6 max-w-4xl mx-auto text-on-surface">
-          The Last Notification API You&apos;ll Ever Need.
-        </h1>
-        <p className="text-lg font-medium leading-snug text-on-surface-variant max-w-2xl mx-auto mb-10">
-          High-precision delivery across Email, Webhooks, Telegram, SMS, and
-          Push. One unified interface for all your transactional communication.
-        </p>
-        <WaitlistForm variant="hero" />
-        <div className="relative max-w-5xl mx-auto h-64 bg-surface-container border border-outline-variant flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--color-primary-muted)_0%,_var(--color-surface-container)_70%)] opacity-50" />
-          <div className="z-10 flex gap-8 items-center text-on-surface-variant">
-            <div className="flex flex-col items-center gap-2">
-              <span className="material-symbols-outlined text-4xl">mail</span>
-            </div>
-            <div className="h-[2px] w-16 bg-outline-variant relative">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full animate-pulse" />
-            </div>
-            <div className="flex flex-col items-center gap-2 p-4 bg-surface-container-lowest border border-outline">
-              <span className="material-symbols-outlined text-5xl text-primary">
-                hub
-              </span>
-            </div>
-            <div className="h-[2px] w-16 bg-outline-variant relative">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full animate-pulse" />
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <span className="material-symbols-outlined text-4xl">sms</span>
-            </div>
-          </div>
-        </div>
-      </section>
+    return (
+        <>
+            <section className="max-w-7xl mx-auto px-6 py-hero text-center">
+                <h1 className="text-3xl font-bold leading-tight lg:text-5xl lg:leading-tight mb-6 max-w-4xl mx-auto text-on-surface">
+                    The Last Notification API You&apos;ll Ever Need.
+                </h1>
+                <p className="text-lg font-medium leading-snug text-on-surface-variant max-w-2xl mx-auto mb-10">
+                    High-precision delivery across Email, Webhooks, Telegram,
+                    SMS, and Push. One unified interface for all your
+                    transactional communication.
+                </p>
+                <WaitlistForm variant="hero" />
+                <div className="relative w-[calc(100%+3rem)] -ml-6 mt-10 overflow-hidden">
+                    <Image
+                        src="/screenshot.png"
+                        alt="PulseRelay dashboard screenshot"
+                        width={1200}
+                        height={600}
+                        className="w-full h-auto"
+                        priority
+                    />
+                </div>
+            </section>
 
-      <section className="max-w-7xl mx-auto px-6 py-section bg-surface-container-low border-y border-outline-variant">
+            {/* <section className="max-w-7xl mx-auto px-6 py-section bg-surface-container-low border-y border-outline-variant">
         <h2 className="text-2xl font-semibold text-center mb-12">
           Universal Connectivity
         </h2>
@@ -151,20 +141,20 @@ await pulse.send({
             </pre>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section
-        id="cta-section"
-        className="max-w-4xl mx-auto px-6 py-section text-center border-t border-outline-variant pt-16"
-      >
-        <h2 className="text-2xl font-semibold mb-4">
-          Ready to upgrade your infrastructure?
-        </h2>
-        <p className="text-base text-on-surface-variant mb-8">
-          Secure your spot in the early access program.
-        </p>
-        <WaitlistForm variant="cta" />
-      </section>
-    </>
-  );
+            {/* <section
+                id="cta-section"
+                className="max-w-4xl mx-auto px-6 py-section text-center border-t border-outline-variant pt-16"
+            >
+                <h2 className="text-2xl font-semibold mb-4">
+                    Ready to upgrade your infrastructure?
+                </h2>
+                <p className="text-base text-on-surface-variant mb-8">
+                    Secure your spot in the early access program.
+                </p>
+                <WaitlistForm variant="cta" />
+            </section> */}
+        </>
+    );
 }
